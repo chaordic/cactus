@@ -1,0 +1,48 @@
+version '1.0-SNAPSHOT'
+
+apply plugin: 'scala'
+
+sourceCompatibility = 1.5
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile(
+            'org.scala-lang:scala-library:2.11.8',
+            'org.json4s:json4s-jackson_2.11:3.2.11',
+            'org.json4s:json4s-ext_2.11:3.2.11',
+            'com.sksamuel.elastic4s:elastic4s-core_2.11:2.4.0',
+            'com.sksamuel.elastic4s:elastic4s-jackson_2.11:2.4.0'
+    )
+    testCompile(
+            'org.scalamock:scalamock-scalatest-support_2.11:3.5.0',
+            'org.scalatest:scalatest_2.11:3.0.1'
+    )
+}
+
+task sourceJar(type: Jar) {
+    from sourceSets.main.allJava
+}
+
+// Configuration for integration tests
+sourceSets {
+    integTest {
+        compileClasspath += main.output + test.output
+        runtimeClasspath += main.output + test.output
+    }
+}
+
+configurations {
+    integTestCompile.extendsFrom testCompile
+    integTestRuntime.extendsFrom testRuntime
+}
+
+task integTest(type: Test) {
+    testClassesDir = sourceSets.integTest.output.classesDir
+    classpath = sourceSets.integTest.runtimeClasspath
+}
+integTest.reports.html.destination = file("$buildDir/reports/integTests")
+
+check.dependsOn integTest
