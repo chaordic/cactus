@@ -28,11 +28,11 @@ object Parser {
 
   def comparativeQuery(op: Operation, property: String, value: Any): QueryDefinition = {
     value match {
-      case _: Boolean                             => termQuery(property, value)
-      case _: Double                              => comparativeQueryHandler(op, property, value.asInstanceOf[Double])
-      case _: BigInt                              => comparativeQueryHandler(op, property, value.asInstanceOf[BigInt].toInt)
-      case _: String                              => comparativeQueryHandler(op, property, value.asInstanceOf[String])
-      case _                                      => throw InvalidCactusQueryFormatException()
+      case _: Boolean => termQuery(property, value)
+      case _: Double  => comparativeQueryHandler(op, property, value.asInstanceOf[Double])
+      case _: BigInt  => comparativeQueryHandler(op, property, value.asInstanceOf[BigInt].toInt)
+      case _: String  => comparativeQueryHandler(op, property, value.asInstanceOf[String])
+      case _          => throw InvalidCactusQueryFormatException()
     }
   }
 
