@@ -22,7 +22,7 @@ object Parser {
       case GT => rangeQuery(property) from value includeLower false
       case LE => rangeQuery(property) to value includeUpper true
       case GE => rangeQuery(property) from value includeUpper true
-      case _  => termQuery(property, value)
+      case _  => matchQuery(property, value)
     }
   }
 
@@ -49,14 +49,14 @@ object Parser {
     Operation.withName(cactus.op) match {
       case NE => nestedQuery("details").query {
         bool {
-          must(termQuery("details.name", name))
+          must(matchQuery("details.name", name))
           not(comparativeQuery(NE, s"details.$valueType", cactus.args))
         }
       }
       case op => nestedQuery("details").query {
         bool {
           must (
-            termQuery("details.name", name),
+            matchQuery("details.name", name),
             comparativeQuery(op, s"details.$valueType", cactus.args)
           )
         }
@@ -71,13 +71,13 @@ object Parser {
     Operation.withName(cactus.op) match {
       case ALL => nestedQuery(field).query {
         bool {
-          must(listArgs.map(x => termQuery(s"$field.id", x)))
+          must(listArgs.map(x => matchQuery(s"$field.id", x)))
         }
       }
       case ANY => nestedQuery(field).query {
         bool {
           bool {
-            should(listArgs.map(x => termQuery(s"$field.id", x)))
+            should(listArgs.map(x => matchQuery(s"$field.id", x)))
           }
         }
       }

@@ -1,0 +1,130 @@
+{
+  "settings": {},
+  "mappings": {
+    "product_ranking": {
+      "properties": {
+        "@timestamp": {
+          "type": "date",
+          "format": "strict_date_optional_time||epoch_millis"
+        },
+        "@version": {
+          "type": "string",
+          "index": "not_analyzed",
+          "doc_values": false
+        },
+        "productId": {
+          "type": "string",
+          "index": "not_analyzed",
+          "doc_values": false
+        },
+        "apiKey": {
+          "type": "string",
+          "index": "not_analyzed",
+          "doc_values": false
+        },
+        "created": {
+          "format": "yyyy-MM-dd HH:mm:ss",
+          "type": "date"
+        },
+        "status" : {
+          "type": "string",
+          "index": "not_analyzed",
+          "doc_values": false
+        },
+        "rankings": {
+          "type": "nested",
+          "properties": {
+            "generationUUID": {
+              "type": "string",
+              "index": "not_analyzed",
+              "doc_values": false
+            },
+            "weight": {
+              "type": "float"
+            },
+            "algRef": {
+              "type": "string",
+              "index": "not_analyzed",
+              "doc_values": false
+            }
+          }
+        },
+        "categories": {
+          "type": "nested",
+          "properties": {
+            "name": {
+              "type": "string"
+            },
+            "id": {
+              "type": "string",
+              "index": "not_analyzed",
+              "doc_values": false
+            },
+            "parents": {
+              "type": "string",
+              "index": "not_analyzed",
+              "doc_values": false
+            }
+          }
+        },
+        "type": {
+          "type": "string"
+        },
+        "info": {
+          "properties": {
+            "created": {
+              "type": "string"
+            },
+            "oldPrice": {
+              "type": "string"
+            },
+            "sku": {
+              "type": "string"
+            },
+            "newPrice": {
+              "type": "string"
+            }
+          }
+        },
+        "tags": {
+          "type": "nested",
+          "properties": {
+            "name": {
+              "type": "string"
+            },
+            "id": {
+              "type": "string",
+              "index": "not_analyzed",
+              "doc_values": false
+            },
+            "parents": {
+              "type": "string",
+              "index": "not_analyzed",
+              "doc_values": false
+            }
+          }
+        },
+        "details": {
+          "type": "nested",
+          "properties": {
+            "name": {
+              "type": "string"
+            },
+            "value_int": {
+              "type": "integer"
+            },
+            "value_str": {
+              "type": "string"
+            },
+            "value_float": {
+              "type": "float"
+            },
+            "value_bool": {
+              "type": "boolean"
+            }
+          }
+        }
+      }
+    }
+  }
+}

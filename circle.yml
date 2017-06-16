@@ -2,8 +2,6 @@ version: 2
 jobs:
   build:
     working_directory: ~/platform-cache
-    docker:
-      - image: elasticsearch:2.4.3
     steps:
       - checkout
 

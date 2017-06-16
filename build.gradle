@@ -1,14 +1,36 @@
+plugins {
+    id 'scala'
+    id 'maven-publish'
+    id "com.github.maiflai.scalatest" version "0.15"
+}
 version '1.0-SNAPSHOT'
 
-apply plugin: 'scala'
-
-sourceCompatibility = 1.5
+sourceSets {
+    main {
+        scala {
+            srcDirs = ['src/main/scala']
+        }
+    }
+    test {
+        scala {
+            srcDirs = ['src/test/scala']
+        }
+    }
+}
 
 repositories {
     mavenCentral()
+    maven {
+        url 'https://platform-artifactory.chaordicsystems.com/artifactory/platform/'
+        credentials {
+            username artifactoryUser
+            password artifactoryPass
+        }
+    }
 }
 
 dependencies {
+    zinc 'com.typesafe.zinc:zinc:0.3.9'
     compile(
             'org.scala-lang:scala-library:2.11.8',
             'org.json4s:json4s-jackson_2.11:3.2.11',
@@ -18,31 +40,43 @@ dependencies {
     )
     testCompile(
             'org.scalamock:scalamock-scalatest-support_2.11:3.5.0',
-            'org.scalatest:scalatest_2.11:3.0.1'
+            'org.scalatest:scalatest_2.11:3.0.1',
+            "com.typesafe:config:1.3.1"
     )
+    testRuntime 'org.pegdown:pegdown:1.4.2'
 }
 
-task sourceJar(type: Jar) {
-    from sourceSets.main.allJava
-}
 
-// Configuration for integration tests
-sourceSets {
-    integTest {
-        compileClasspath += main.output + test.output
-        runtimeClasspath += main.output + test.output
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            groupId 'com.chaordicsystems'
+            artifactId 'cactus'
+            from components.java
+
+            artifact sourceJar {
+                classifier "sources"
+            }
+        }
+    }
+
+    repositories {
+        maven {
+            url "https://platform-artifactory.chaordicsystems.com/artifactory/platform/"
+            credentials {
+                username artifactoryUser
+                password artifactoryPass
+            }
+        }
     }
 }
 
-configurations {
-    integTestCompile.extendsFrom testCompile
-    integTestRuntime.extendsFrom testRuntime
+task sourceJar(type: Jar) {
+    from sourceSets.main.allScala
 }
 
-task integTest(type: Test) {
-    testClassesDir = sourceSets.integTest.output.classesDir
-    classpath = sourceSets.integTest.runtimeClasspath
+test {
+    testLogging {
+        events "passed", "skipped", "failed", "standardOut", "standardError"
+    }
 }
-integTest.reports.html.destination = file("$buildDir/reports/integTests")
-
-check.dependsOn integTest
