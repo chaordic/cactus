@@ -30,7 +30,7 @@ object Parser {
     value match {
       case _: Boolean                             => termQuery(property, value)
       case _: Double                              => comparativeQueryHandler(op, property, value.asInstanceOf[Double])
-      case x if x.isInstanceOf[scala.math.BigInt] => comparativeQueryHandler(op, property, value.asInstanceOf[scala.math.BigInt].toInt)
+      case _: BigInt                              => comparativeQueryHandler(op, property, value.asInstanceOf[BigInt].toInt)
       case _: String                              => comparativeQueryHandler(op, property, value.asInstanceOf[String])
       case _                                      => throw InvalidCactusQueryFormatException()
     }
@@ -39,7 +39,7 @@ object Parser {
   def handleDetails(cactus: Cactus): NestedQueryDefinition = {
     val name = cactus.field.get.split("\\.")(1)
     val valueType = cactus.args match {
-      case x if x.isInstanceOf[scala.math.BigInt] => "value_int"
+      case _: BigInt  => "value_int"
       case _: Boolean => "value_bool"
       case _: Double  => "value_float"
       case _: String  => "value_str"

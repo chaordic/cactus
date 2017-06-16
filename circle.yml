@@ -1,0 +1,28 @@
+version: 2
+jobs:
+  build:
+    working_directory: ~/platform-cache
+    docker:
+      - image: docker.elastic.co/elasticsearch/elasticsearch:2.4.3
+    steps:
+      - checkout
+
+      - run:
+          name: Install Dependencies
+          command: ./gradlew dependencies
+
+      - run:
+          name: Test
+          command: ./gradlew check
+
+      - deploy:
+          command: |
+            if [ "${CIRCLE_BRANCH}" == "master" ]; then
+              echo "Nothing"
+            fi
+
+      - store_artifacts:
+          path: test-result
+
+      - store_test_results:
+          path: test-result
