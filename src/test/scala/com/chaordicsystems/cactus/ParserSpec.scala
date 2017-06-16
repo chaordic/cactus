@@ -47,9 +47,6 @@ class ParserSpec extends WordSpec {
       val m1 = parse(cactusToES(parse(query4)).builder.toString).extract[Map[String, Any]]
       val m2 = parse(result4.builder.toString).extract[Map[String, Any]]
 
-      println(cactusToES(parse(query4)).builder)
-      println(result4.builder)
-
       assert((m1.toSet diff m2.toSet).toMap.isEmpty)
     }
   }

@@ -18,7 +18,9 @@ jobs:
       - deploy:
           command: |
             if [ "${CIRCLE_BRANCH}" == "master" ]; then
-              echo "Nothing"
+              ./create-tag.sh
+              ./gradlew publish
+              git push origin master --follow-tags
             fi
 
       - store_artifacts:

@@ -87,11 +87,11 @@ class ElasticSearchSpec extends WordSpec with BeforeAndAfterAll {
       val query = search in INDEX_NAME -> DOC_TYPE query {
         Parser.cactusToES(parse(query1))
       }
-      val something = Await.result(getClient().execute {
+      val result = Await.result(getClient().execute {
         query.limit(maxQuerySize)
       }, 2 seconds)
 
-      assert(something.getHits.hits.length == 1)
+      assert(result.getHits.hits.length == 1)
     }
   }
 
@@ -101,11 +101,11 @@ class ElasticSearchSpec extends WordSpec with BeforeAndAfterAll {
       val query = search in INDEX_NAME -> DOC_TYPE query {
         Parser.cactusToES(parse(query2))
       }
-      val something = Await.result(getClient().execute {
+      val result = Await.result(getClient().execute {
         query.limit(maxQuerySize)
       }, 2 seconds)
 
-      assert(something.getHits.hits.length == 1)
+      assert(result.getHits.hits.length == 1)
     }
   }
 
@@ -115,11 +115,11 @@ class ElasticSearchSpec extends WordSpec with BeforeAndAfterAll {
       val query = search in INDEX_NAME -> DOC_TYPE query {
         Parser.cactusToES(parse(query3))
       }
-      val something = Await.result(getClient().execute {
+      val result = Await.result(getClient().execute {
         query.limit(maxQuerySize)
       }, 2 seconds)
 
-      assert(something.getHits.hits.length == 1)
+      assert(result.getHits.hits.length == 1)
     }
   }
 }
