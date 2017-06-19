@@ -65,21 +65,35 @@ object Parser {
     }
   }
 
-  def handleCatOrTag(cactus: Cactus): NestedQueryDefinition = {
+  def handleCatOrTag(cactus: Cactus): QueryDefinition = {
     val field = if (cactus.field.isDefined) cactus.field.get else throw InvalidCactusQueryFormatException()
     val listArgs = cactus.args.asInstanceOf[List[Any]]
 
     Operation.withName(cactus.op) match {
-      case ALL => nestedQuery(field).query {
-        bool {
-          must(listArgs.map(x => matchQuery(s"$field.id", x)))
+      case ALL =>
+        if (listArgs.length == 1) {
+          nestedQuery(field).query {
+            bool {
+              must(matchQuery(s"$field.id", listArgs.head))
+            }
+          }
+        } else {
+          bool {
+            must(
+              listArgs.map(x => {
+                nestedQuery(field).query {
+                  bool {
+                    must(matchQuery(s"$field.id", x))
+                  }
+                }
+              })
+            )
+          }
         }
-      }
+
       case ANY => nestedQuery(field).query {
         bool {
-          bool {
-            should(listArgs.map(x => matchQuery(s"$field.id", x)))
-          }
+          should(listArgs.map(x => matchQuery(s"$field.id", x)))
         }
       }
     }

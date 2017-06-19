@@ -1,96 +1,154 @@
 [{
-  "rankings": [
-    {
-      "generationUUID": "testGeneration",
-      "weight": 0.000001,
-      "algRef": "testAlgRef"
-    }
-  ],
-  "apiKey": "testApiKey",
-  "productId": "57841",
-  "details": [
-    {
-      "name": "tamanho",
-      "value_str": "38"
-    },
-    {
-      "name": "Peso",
-      "value_str": "0.923"
-    }
-  ],
-  "categories": [
-    {
-      "name": "adidas",
-      "id": "adidas",
-      "parents": [
-        "tenis"
-      ]
-    },
-    {
-      "name": "tenis",
-      "id": "tenis",
-      "parents": null
-    }
-  ],
-  "type": "ranking",
-  "status": "AVAILABLE",
-  "tags": [
-    {
-      "name": "tenis",
-      "id": "tenis",
-      "parents": null
-    }
+"rankings": [
+{
+  "generationUUID": "testGeneration",
+  "weight": 0.000001,
+  "algRef": "testAlgRef"
+}
+],
+"apiKey": "testApiKey",
+"productId": "57841",
+"details": [
+{
+  "name": "tamanho",
+  "value_str": "38"
+},
+{
+  "name": "Peso",
+  "value_str": "0.923"
+}
+],
+"categories": [
+{
+  "name": "adidas",
+  "id": "adidas",
+  "parents": [
+    "tenis"
   ]
+},
+{
+  "name": "tenis",
+  "id": "tenis",
+  "parents": null
+}
+],
+"type": "ranking",
+"status": "AVAILABLE",
+"tags": [
+{
+  "name": "tenis",
+  "id": "tenis",
+  "parents": null
+}
+]
 },{
-  "rankings": [
-    {
-      "generationUUID": "testGeneration",
-      "weight": 0.000001,
-      "algRef": "testAlgRef"
-    }
-  ],
-  "apiKey": "testApiKey",
-  "productId": "57842",
-  "details": [
-    {
-      "name": "marca",
-      "value_str": "nike"
-    },
-    {
-      "name": "size",
-      "value_str": "M"
-    },
-    {
-      "name": "price",
-      "value_float": 9.0
-    }
-  ],
-  "categories": [
-    {
-      "name": "adidas",
-      "id": "adidas",
-      "parents": [
-        "tenis"
-      ]
-    },
-    {
-      "name": "tenis",
-      "id": "tenis",
-      "parents": null
-    }
-  ],
-  "type": "ranking",
-  "status": "AVAILABLE",
-  "tags": [
-    {
-      "name": "tenis",
-      "id": "tenis",
-      "parents": null
-    },
-    {
-      "name": "adidas",
-      "id": "adidas",
-      "parents": null
-    }
+"rankings": [
+{
+  "generationUUID": "testGeneration",
+  "weight": 0.000001,
+  "algRef": "testAlgRef"
+}
+],
+"apiKey": "testApiKey",
+"productId": "57842",
+"details": [
+{
+  "name": "marca",
+  "value_str": "nike"
+},
+{
+  "name": "size",
+  "value_str": "M"
+},
+{
+  "name": "price",
+  "value_float": 9.0
+}
+],
+"categories": [
+{
+  "name": "adidas",
+  "id": "adidas",
+  "parents": [
+    "tenis"
   ]
-}]
+},
+{
+  "name": "tenis",
+  "id": "tenis",
+  "parents": null
+}
+],
+"type": "ranking",
+"status": "AVAILABLE",
+"tags": [
+{
+  "name": "tenis",
+  "id": "tenis",
+  "parents": null
+},
+{
+  "name": "adidas",
+  "id": "adidas",
+  "parents": null
+}
+]
+},
+{
+"rankings": [
+  {
+    "generationUUID": "testGeneration",
+    "weight": 0.000001,
+    "algRef": "testAlgRef"
+  }
+],
+"apiKey": "testApiKey",
+"productId": "57843",
+"details": [
+  {
+    "name": "marca",
+    "value_str": "nike"
+  },
+  {
+    "name": "available",
+    "value_bool": true
+  },
+  {
+    "name": "size",
+    "value_str": "M"
+  },
+  {
+    "name": "price",
+    "value_float": 10.98
+  }
+],
+"categories": [
+  {
+    "name": "adidas",
+    "id": "adidas",
+    "parents": [
+      "tenis"
+    ]
+  },
+  {
+    "name": "shoes",
+    "id": "shoes",
+    "parents": null
+  }
+],
+"type": "ranking",
+"status": "AVAILABLE",
+"tags": [
+  {
+    "name": "tenis",
+    "id": "tenis",
+    "parents": null
+  },
+  {
+    "name": "adidas",
+    "id": "adidas",
+    "parents": null
+  }
+]
+}
+]

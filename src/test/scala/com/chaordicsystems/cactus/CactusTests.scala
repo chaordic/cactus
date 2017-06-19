@@ -239,14 +239,23 @@ object CactusTests {
         }
       ),
       must(
-        nestedQuery("categories").query {
-          bool {
-            must (
-              matchQuery("categories.id", "shoes"),
-              matchQuery("categories.id", "adidas")
-            )
-          }
-        },
+        bool {
+          must(
+            nestedQuery("categories").query {
+              bool {
+                must (
+                  matchQuery("categories.id", "shoes")
+                )
+              }
+            },
+            nestedQuery("categories").query {
+              bool {
+                must (
+                  matchQuery("categories.id", "adidas")
+                )
+              }
+            }
+          )},
         nestedQuery("details").query {
           bool {
             must (
