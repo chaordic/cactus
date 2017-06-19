@@ -2,7 +2,7 @@ package com.chaordicsystems.cactus
 
 import com.sksamuel.elastic4s.ElasticDsl.{bool, matchQuery, must, nestedQuery, rangeQuery, should, termQuery}
 
-object Spines {
+object CactusTests {
 
   val query1: String =
     """

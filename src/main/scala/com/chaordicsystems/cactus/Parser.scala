@@ -1,11 +1,11 @@
 package com.chaordicsystems.cactus
 
 import com.chaordicsystems.cactus.Operation._
-import com.chaordicsystems.cactus.Validator.InvalidCactusQueryFormatException
 import com.sksamuel.elastic4s.ElasticDsl._
 import com.sksamuel.elastic4s._
 import org.json4s._
 
+case class InvalidCactusQueryFormatException(m: String = "There's a problem with your query, please check the documentation.") extends Exception
 case class Cactus(op: String, field: Option[String], args: Any)
 
 object Parser {

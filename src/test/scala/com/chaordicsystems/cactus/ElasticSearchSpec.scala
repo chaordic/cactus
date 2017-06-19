@@ -9,7 +9,7 @@ import org.elasticsearch.node.NodeBuilder._
 import org.json4s.DefaultFormats
 import org.json4s.jackson.JsonMethods._
 import org.scalatest.{BeforeAndAfterAll, WordSpec}
-import com.chaordicsystems.cactus.Spines._
+import com.chaordicsystems.cactus.CactusTests._
 
 import scala.concurrent.Await
 import scala.concurrent.duration._
@@ -82,7 +82,7 @@ class ElasticSearchSpec extends WordSpec with BeforeAndAfterAll {
   }
 
   "query" should {
-    "return 1 documet" in {
+    "return 1 document" in {
 
       val query = search in INDEX_NAME -> DOC_TYPE query {
         Parser.cactusToES(parse(query1))
@@ -96,7 +96,7 @@ class ElasticSearchSpec extends WordSpec with BeforeAndAfterAll {
   }
 
   "query2" should {
-    "return 1 documet" in {
+    "return 1 document" in {
 
       val query = search in INDEX_NAME -> DOC_TYPE query {
         Parser.cactusToES(parse(query2))
@@ -110,7 +110,7 @@ class ElasticSearchSpec extends WordSpec with BeforeAndAfterAll {
   }
 
   "query3" should {
-    "return 1 documet" in {
+    "return 1 document" in {
 
       val query = search in INDEX_NAME -> DOC_TYPE query {
         Parser.cactusToES(parse(query3))

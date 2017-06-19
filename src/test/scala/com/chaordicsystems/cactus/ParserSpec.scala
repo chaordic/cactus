@@ -4,7 +4,7 @@ import com.chaordicsystems.cactus.Parser._
 import org.json4s._
 import org.json4s.jackson.JsonMethods._
 import org.scalatest.WordSpec
-import com.chaordicsystems.cactus.Spines._
+import com.chaordicsystems.cactus.CactusTests._
 
 class ParserSpec extends WordSpec {
   "query 1" should {
