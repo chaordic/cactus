@@ -10,7 +10,7 @@ object CactusTests {
       |    "op": "AND",
       |    "args": [
       |        {
-                    "op":"EQ",
+      |             "op":"EQ",
       |             "field": "details.tamanho",
       |             "args": "38"
       |         },
@@ -258,4 +258,23 @@ object CactusTests {
       )
     )
   }
+
+  val failQuery =
+    """
+      |{
+      |    "op": "AND",
+      |    "args": [
+      |        {
+      |             "op":"EQ",
+      |             "field": "details.tamanho",
+      |             "args": "38"
+      |         },
+      |         {
+      |             "op":"OR",
+      |             "field": "details.Peso",
+      |             "args": "0.923"
+      |         }
+      |    ]
+      |}
+    """.stripMargin
 }
