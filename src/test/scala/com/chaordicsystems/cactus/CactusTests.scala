@@ -1,6 +1,7 @@
 package com.chaordicsystems.cactus
 
 import com.sksamuel.elastic4s.ElasticDsl.{bool, matchQuery, must, nestedQuery, rangeQuery, should, termQuery}
+import com.sksamuel.elastic4s.QueryDefinition
 
 object CactusTests {
 
@@ -23,7 +24,7 @@ object CactusTests {
       |}
     """.stripMargin
 
-  val result1 =
+  val result1: String =
     """
       |{
       |  "bool" : {
@@ -78,7 +79,7 @@ object CactusTests {
       |}
     """.stripMargin
 
-  val query2 =
+  val query2: String =
     """
       |{
       |    "op": "AND",
@@ -107,7 +108,7 @@ object CactusTests {
       |}
     """.stripMargin
 
-  val result2 = bool {
+  val result2: QueryDefinition = bool {
     must (
       bool {
         should (
@@ -127,7 +128,7 @@ object CactusTests {
               )
             }
           }
-        )
+        ) minimumShouldMatch 1
       },
       nestedQuery("details").query {
         bool {
@@ -140,7 +141,7 @@ object CactusTests {
     )
   }
 
-  val query3 =
+  val query3: String =
     """
       |{
       |    "op": "AND",
@@ -159,14 +160,14 @@ object CactusTests {
       |}
     """.stripMargin
 
-  val result3 = bool {
+  val result3: QueryDefinition = bool {
     must (
       nestedQuery("tags").query {
         bool {
           should (
             matchQuery("tags.id", "adidas"),
             matchQuery("tags.id", "nike")
-          )
+          ) minimumShouldMatch 1
         }
       },
       nestedQuery("categories").query {
@@ -179,7 +180,7 @@ object CactusTests {
     )
   }
 
-  val query4 =
+  val query4: String =
     """
       |{
       |    "op": "AND",
@@ -218,7 +219,7 @@ object CactusTests {
       |}
     """.stripMargin
 
-  val result4 = bool {
+  val result4: QueryDefinition = bool {
     must (
       should(
         nestedQuery("details").query {
@@ -237,7 +238,7 @@ object CactusTests {
             )
           }
         }
-      ),
+      ) minimumShouldMatch 1,
       must(
         bool {
           must(
@@ -268,7 +269,47 @@ object CactusTests {
     )
   }
 
-  val failQuery =
+  val query5: String =
+    """
+      |{
+      |    "op": "AND",
+      |    "args": [
+      |        {
+      |            "op":"OR",
+      |            "args":[
+      |                {
+      |                    "op":"EQ",
+      |                    "field": "details.available",
+      |                    "args": true
+      |                },
+      |                {
+      |                    "op":"GE",
+      |                    "field": "details.size",
+      |                    "args": 10
+      |                }
+      |            ]
+      |        },
+      |        {
+      |            "op":"AND",
+      |            "args": [
+      |                {
+      |                    "op":"ALL",
+      |                    "field": "categories",
+      |                    "args": ["preto", "olympus"]
+      |                },
+      |                {
+      |                    "op":"EQ",
+      |                    "field": "details.price",
+      |                    "args": 10.98
+      |                }
+      |            ]
+      |        }
+      |    ]
+      |}
+    """.stripMargin
+
+
+  val failQuery: String =
     """
       |{
       |    "op": "AND",
@@ -288,7 +329,7 @@ object CactusTests {
     """.stripMargin
 
 
-  val failJsonQuery =
+  val failJsonQuery: String =
     """
       |{
       |    "op": "AND",

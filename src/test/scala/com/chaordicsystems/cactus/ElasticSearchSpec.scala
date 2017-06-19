@@ -123,7 +123,6 @@ class ElasticSearchSpec extends WordSpec with BeforeAndAfterAll {
 
   "query4" should {
     "return 1 document" in {
-
       val query = search in INDEX_NAME -> DOC_TYPE query {
         Parser.cactusToES(parse(query4))
       }
@@ -132,6 +131,19 @@ class ElasticSearchSpec extends WordSpec with BeforeAndAfterAll {
       }, 2 seconds)
 
       assert(result.getHits.hits.length == 1)
+    }
+  }
+
+  "query5" should {
+    "not return 1 document" in {
+      val query = search in INDEX_NAME -> DOC_TYPE query {
+        Parser.cactusToES(parse(query5))
+      }
+      val result = Await.result(getClient().execute {
+        query.limit(maxQuerySize)
+      }, 2 seconds)
+
+      assert(result.getHits.hits.length == 0)
     }
   }
 }

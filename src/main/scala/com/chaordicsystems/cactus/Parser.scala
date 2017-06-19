@@ -93,7 +93,7 @@ object Parser {
 
       case ANY => nestedQuery(field).query {
         bool {
-          should(listArgs.map(x => matchQuery(s"$field.id", x)))
+          should(listArgs.map(x => matchQuery(s"$field.id", x))) minimumShouldMatch 1
         }
       }
     }
@@ -110,7 +110,7 @@ object Parser {
           must(listArgs.map(x => validateAndTranslate(mapToCactus(x.asInstanceOf[Map[String, Any]]))))
         }
         case OR => bool {
-          should(listArgs.map(x => validateAndTranslate(mapToCactus(x.asInstanceOf[Map[String, Any]]))))
+          should(listArgs.map(x => validateAndTranslate(mapToCactus(x.asInstanceOf[Map[String, Any]]))))  minimumShouldMatch 1
         }
       }
     }
