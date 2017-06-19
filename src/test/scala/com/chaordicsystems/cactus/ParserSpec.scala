@@ -5,6 +5,7 @@ import org.json4s._
 import org.json4s.jackson.JsonMethods._
 import org.scalatest.WordSpec
 import com.chaordicsystems.cactus.CactusTests._
+import com.fasterxml.jackson.core.JsonParseException
 
 class ParserSpec extends WordSpec {
 
@@ -50,6 +51,14 @@ class ParserSpec extends WordSpec {
     "fail when attempting to parse it" in {
       intercept[InvalidCactusQueryFormatException] {
         cactusToES(parse(failQuery))
+      }
+    }
+  }
+
+  "invalid json" should {
+    "fail when attempting to parse it" in {
+      intercept[JsonParseException] {
+        cactusToES(failJsonQuery)
       }
     }
   }

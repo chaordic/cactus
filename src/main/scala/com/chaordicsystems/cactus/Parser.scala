@@ -4,6 +4,7 @@ import com.chaordicsystems.cactus.Operation._
 import com.sksamuel.elastic4s.ElasticDsl._
 import com.sksamuel.elastic4s._
 import org.json4s._
+import org.json4s.jackson.JsonMethods._
 
 case class InvalidCactusQueryFormatException(m: String = "There's a problem with your query, please check the documentation.") extends Exception
 case class Cactus(op: String, field: Option[String], args: Any)
@@ -115,5 +116,11 @@ object Parser {
     implicit val formats = DefaultFormats
 
     validateAndTranslate(jsonValue.extract[Cactus])
+  }
+
+  def cactusToES(jsonValue: String): QueryDefinition = {
+    implicit val formats = DefaultFormats
+
+    validateAndTranslate(parse(jsonValue).extract[Cactus])
   }
 }

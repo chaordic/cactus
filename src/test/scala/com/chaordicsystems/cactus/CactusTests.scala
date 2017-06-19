@@ -277,4 +277,24 @@ object CactusTests {
       |    ]
       |}
     """.stripMargin
+
+
+  val failJsonQuery =
+    """
+      |{
+      |    "op": "AND",
+      |    "args": [
+      |        {
+      |             "op":"EQ",
+      |             "field": "details.tamanho",
+      |             "args": "38"
+      |         }
+      |         {
+      |             "op":"EQ",
+      |             "field": "details.Peso",
+      |             "args": "0.923"
+      |         }
+      |    ]
+      |}
+    """.stripMargin
 }
