@@ -11,44 +11,44 @@ object Parser {
   implicit val formats = DefaultFormats
 
   def handleLogical(operation: JValue, typeEnabled: Boolean): QueryDefinition = {
-    val op = (operation \ "op").extract[String]
+    val op = Operator.withName((operation \ "op").extract[String])
     val args = (operation \ "args").extract[List[JValue]]
 
     if (args.length < 2) throw InvalidCactusQueryFormatException()
 
-    Operator.withName(op) match {
+    op match {
       case AND => AND(args.map(x => validateAndTranslate(x, typeEnabled)))
       case OR => OR(args.map(x => validateAndTranslate(x, typeEnabled)))
     }
   }
 
   def handleComparative(operation: JValue): QueryDefinition = {
-    val op = (operation \ "op").extract[String]
+    val op = Operator.withName((operation \ "op").extract[String])
     val field = Field((operation\"field").extract[String])
     val args = (operation \ "args").extract[Any]
-    field * (Operator.withName(op), args, true)
+    field * (op, args, true)
   }
 
   def handleContains(operation: JValue): QueryDefinition = {
-    val op = (operation \ "op").extract[String]
+    val op = Operator.withName((operation \ "op").extract[String])
     val args = (operation \ "args").extract[List[Any]]
     val field = Field((operation\"field").extract[String])
 
-    Operator.withName(op) match {
+    op match {
       case ALL => field ALL args
       case ANY => field ANY args
     }
   }
 
   def validateAndTranslate(operation: JValue, typeEnabled: Boolean): QueryDefinition = {
-    val op = (operation \ "op").extract[String]
-    if (Operator.isLogical(op)) {
+    val op = Operator.withName((operation \ "op").extract[String])
+    if (isBinary(op)) {
       handleLogical(operation, typeEnabled)
     }
-    else if (Operator.isComparative(op)) {
+    else if (isUnary(op)) {
       handleComparative(operation)
     }
-    else if (Operator.isContains(op)) {
+    else if (isMultiary(op)) {
       handleContains(operation)
     }
     else {

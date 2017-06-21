@@ -5,7 +5,6 @@ import com.sksamuel.elastic4s.ElasticDsl._
 import com.sksamuel.elastic4s.QueryDefinition
 
 case class Field(value: String) extends Enumeration  {
-
   private def isFieldNested: Boolean = value.contains(".")
 
   private def getPath: String = value.split('.')(0)
@@ -15,7 +14,7 @@ case class Field(value: String) extends Enumeration  {
     if (isFieldNested) nestedQuery(getPath).query { query }
     else query
 
-  private def comparativeQueryHandler(op: Operation, args: Any): QueryDefinition = {
+  private def comparativeQueryHandler(op: Operator, args: Any): QueryDefinition = {
     op match {
       case Operator.LT  => rangeQuery(value) to args includeUpper false
       case Operator.GT  => rangeQuery(value) from args includeLower false
@@ -27,7 +26,7 @@ case class Field(value: String) extends Enumeration  {
     }
   }
 
-  private def comparativeQuery(op: Operation, args: Any): QueryDefinition = {
+  private def comparativeQuery(op: Operator, args: Any): QueryDefinition = {
     println(args.getClass)
     args match {
       case _: Boolean => termQuery(value, args)
@@ -125,7 +124,7 @@ case class Field(value: String) extends Enumeration  {
 
   def ANY(args: List[Any]): QueryDefinition = nestedOrElse(bool { should(args.map(arg => matchQuery(value, arg))) minimumShouldMatch 1 })
 
-  def *(op: Operation, args: Any, typeEnabled: Boolean): QueryDefinition = {
+  def *(op: Operator, args: Any, typeEnabled: Boolean): QueryDefinition = {
     op match {
       case Operator.NE => NE(args, typeEnabled)
       case Operator.EQ => EQ(args, typeEnabled)
