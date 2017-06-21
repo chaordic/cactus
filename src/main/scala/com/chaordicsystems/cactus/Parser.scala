@@ -1,14 +1,19 @@
 package com.chaordicsystems.cactus
 
 import com.chaordicsystems.cactus.Operator._
+import com.sksamuel.elastic4s.ElasticDsl.{bool, must, should}
 import com.sksamuel.elastic4s._
 import org.json4s._
 import org.json4s.jackson.JsonMethods._
 
 case class InvalidCactusQueryFormatException(m: String = "There's a problem with your query, please check the documentation.") extends Exception
 
-object Parser {
+object Parser extends BinaryOperation {
   implicit val formats = DefaultFormats
+
+  def AND(args: List[QueryDefinition]): QueryDefinition = bool { must(args) }
+
+  def OR(args: List[QueryDefinition]): QueryDefinition = bool { should(args) minimumShouldMatch 1 }
 
   def handleUnary(operation: JValue, typeEnabled: Boolean): QueryDefinition = {
     val op = Operator.withName((operation \ "op").extract[String])
@@ -49,17 +54,11 @@ object Parser {
 
   def validateAndTranslate(operation: JValue, typeEnabled: Boolean): QueryDefinition = {
     val op = Operator.withName((operation \ "op").extract[String])
-    if (isBinary(op)) {
-      handleBinary(operation, typeEnabled)
-    }
-    else if (isUnary(op)) {
-      handleUnary(operation, typeEnabled)
-    }
-    else if (isMultiary(op)) {
-      handleMultiary(operation)
-    }
-    else {
-      throw InvalidCactusQueryFormatException()
+    op match {
+      case o if isBinary(o)   => handleBinary(operation, typeEnabled)
+      case o if isUnary(o)    => handleUnary(operation, typeEnabled)
+      case o if isMultiary(o) => handleMultiary(operation)
+      case _                  => throw InvalidCactusQueryFormatException()
     }
   }
 
