@@ -1,10 +1,10 @@
 package com.chaordicsystems.cactus
 
-import com.chaordicsystems.cactus.Operator._
-import com.sksamuel.elastic4s.ElasticDsl._
+import com.chaordicsystems.cactus.Operator.Operator
+import com.sksamuel.elastic4s.ElasticDsl.{bool, matchQuery, must, nestedQuery, not, rangeQuery, should, termQuery}
 import com.sksamuel.elastic4s.QueryDefinition
 
-case class Field(value: String) extends Enumeration  {
+case class Field(value: String) extends Operation {
   private val isFieldNested: Boolean = value.contains(".")
 
   private val getPath: String = value.split('.')(0)
@@ -22,7 +22,7 @@ case class Field(value: String) extends Enumeration  {
       case Operator.GE  => rangeQuery(value) from args includeUpper true
       case Operator.NE  => matchQuery(value, args)
       case Operator.EQ  => matchQuery(value, args)
-      case _             => throw InvalidOperatorException()
+      case _            => throw InvalidOperatorException()
     }
   }
 

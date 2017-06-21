@@ -1,8 +1,5 @@
 package com.chaordicsystems.cactus
 
-import com.sksamuel.elastic4s.QueryDefinition
-import com.sksamuel.elastic4s.ElasticDsl._
-
 case class InvalidOperatorException(m: String = "That's not a valid operation. Please check the project specifications.") extends Exception
 
 object Operator extends Enumeration {
@@ -14,10 +11,6 @@ object Operator extends Enumeration {
   def isBinary(op: Operator): Boolean = op == AND || op == OR
 
   def isMultiary(op: Operator): Boolean = op == ALL || op == ANY
-
-  def AND(args: List[QueryDefinition]): QueryDefinition = bool { must(args) }
-
-  def OR(args: List[QueryDefinition]): QueryDefinition = bool { should(args) minimumShouldMatch 1 }
 }
 
 
