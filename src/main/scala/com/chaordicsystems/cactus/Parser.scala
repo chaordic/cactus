@@ -7,7 +7,7 @@ import org.json4s.jackson.JsonMethods._
 
 case class InvalidCactusQueryFormatException(m: String = "There's a problem with your query, please check the documentation.") extends Exception
 
-object Parser extends Operation {
+object Parser {
   implicit val formats = DefaultFormats
 
   def handleUnary(operation: JValue, typeEnabled: Boolean): QueryDefinition = {
@@ -23,7 +23,6 @@ object Parser extends Operation {
       case Operator.GE => field GE (args, typeEnabled)
     }
   }
-
 
   def handleBinary(operation: JValue, typeEnabled: Boolean): QueryDefinition = {
     val op = Operator.withName((operation \ "op").extract[String])
@@ -43,8 +42,8 @@ object Parser extends Operation {
     val field = Field((operation\"field").extract[String])
 
     op match {
-      case ALL => field ALL args
-      case ANY => field ANY args
+      case Operator.ALL => field ALL args
+      case Operator.ANY => field ANY args
     }
   }
 

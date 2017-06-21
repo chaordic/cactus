@@ -4,7 +4,7 @@ import com.chaordicsystems.cactus.Operator.Operator
 import com.sksamuel.elastic4s.ElasticDsl.{bool, matchQuery, must, nestedQuery, not, rangeQuery, should, termQuery}
 import com.sksamuel.elastic4s.QueryDefinition
 
-case class Field(value: String) extends Operation {
+case class Field(value: String) extends UnaryOperation with MultiaryOperation {
   private val isFieldNested: Boolean = value.contains(".")
 
   private val getPath: String = value.split('.')(0)
@@ -27,7 +27,6 @@ case class Field(value: String) extends Operation {
   }
 
   private def comparativeQuery(op: Operator, args: Any): QueryDefinition = {
-    println(args.getClass)
     args match {
       case _: Boolean => termQuery(value, args)
       case d: Double  => comparativeQueryHandler(op, d)

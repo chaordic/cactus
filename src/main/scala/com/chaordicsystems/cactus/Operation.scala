@@ -1,10 +1,8 @@
 package com.chaordicsystems.cactus
 
-import com.sksamuel.elastic4s.ElasticDsl.{bool, must, should}
 import com.sksamuel.elastic4s.QueryDefinition
 
-trait Operation {
-
+trait UnaryOperation {
   def EQ(args: Any, typeEnabled: Boolean = false): QueryDefinition
 
   def LT(args: Any, typeEnabled: Boolean): QueryDefinition
@@ -16,10 +14,14 @@ trait Operation {
   def GE(args: Any, typeEnabled: Boolean): QueryDefinition
 
   def NE(args: Any, typeEnabled: Boolean): QueryDefinition
+}
 
+trait BinaryOperation {
+  def AND(args: List[QueryDefinition]): QueryDefinition
+  def OR(args: List[QueryDefinition]): QueryDefinition
+}
+
+trait MultiaryOperation {
   def ALL(args: List[Any]): QueryDefinition
-
-  def AND(args: List[QueryDefinition]): QueryDefinition = bool { must(args) }
-
-  def OR(args: List[QueryDefinition]): QueryDefinition = bool { should(args) minimumShouldMatch 1 }
+  def ANY(args: List[Any]): QueryDefinition
 }
