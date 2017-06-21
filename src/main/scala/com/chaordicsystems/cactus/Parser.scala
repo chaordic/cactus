@@ -10,26 +10,33 @@ case class InvalidCactusQueryFormatException(m: String = "There's a problem with
 object Parser {
   implicit val formats = DefaultFormats
 
-  def handleLogical(operation: JValue, typeEnabled: Boolean): QueryDefinition = {
+  def handleBinary(operation: JValue, typeEnabled: Boolean): QueryDefinition = {
     val op = Operator.withName((operation \ "op").extract[String])
     val args = (operation \ "args").extract[List[JValue]]
 
     if (args.length < 2) throw InvalidCactusQueryFormatException()
 
     op match {
-      case AND => AND(args.map(x => validateAndTranslate(x, typeEnabled)))
-      case OR => OR(args.map(x => validateAndTranslate(x, typeEnabled)))
+      case AND => AND(args.map(validateAndTranslate(_, typeEnabled)))
+      case OR => OR(args.map(validateAndTranslate(_, typeEnabled)))
     }
   }
 
-  def handleComparative(operation: JValue): QueryDefinition = {
+  def handleUnary(operation: JValue, typeEnabled: Boolean): QueryDefinition = {
     val op = Operator.withName((operation \ "op").extract[String])
     val field = Field((operation\"field").extract[String])
     val args = (operation \ "args").extract[Any]
-    field * (op, args, true)
+    op match {
+      case Operator.NE => field NE (args, typeEnabled)
+      case Operator.EQ => field EQ (args, typeEnabled)
+      case Operator.LT => field LT (args, typeEnabled)
+      case Operator.GT => field GT (args, typeEnabled)
+      case Operator.LE => field LE (args, typeEnabled)
+      case Operator.GE => field GE (args, typeEnabled)
+    }
   }
 
-  def handleContains(operation: JValue): QueryDefinition = {
+  def handleMultiary(operation: JValue): QueryDefinition = {
     val op = Operator.withName((operation \ "op").extract[String])
     val args = (operation \ "args").extract[List[Any]]
     val field = Field((operation\"field").extract[String])
@@ -43,22 +50,18 @@ object Parser {
   def validateAndTranslate(operation: JValue, typeEnabled: Boolean): QueryDefinition = {
     val op = Operator.withName((operation \ "op").extract[String])
     if (isBinary(op)) {
-      handleLogical(operation, typeEnabled)
+      handleBinary(operation, typeEnabled)
     }
     else if (isUnary(op)) {
-      handleComparative(operation)
+      handleUnary(operation, typeEnabled)
     }
     else if (isMultiary(op)) {
-      handleContains(operation)
+      handleMultiary(operation)
     }
     else {
       throw InvalidCactusQueryFormatException()
     }
   }
 
-  def cactusToES(jsonValue: JValue): QueryDefinition = cactusToES(jsonValue, typeEnabled = false)
-  def cactusToES(jsonValue: JValue, typeEnabled: Boolean): QueryDefinition = validateAndTranslate(jsonValue, typeEnabled)
-
-  def cactusToES(jsonValue: String): QueryDefinition = cactusToES(jsonValue, typeEnabled = false)
-  def cactusToES(jsonValue: String, typeEnabled: Boolean): QueryDefinition = validateAndTranslate(parse(jsonValue), typeEnabled)
+  def cactusToES(jsonValue: String, typeEnabled: Boolean = false): QueryDefinition = validateAndTranslate(parse(jsonValue), typeEnabled)
 }
