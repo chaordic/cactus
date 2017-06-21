@@ -85,7 +85,7 @@ class ElasticSearchSpec extends WordSpec with BeforeAndAfterAll {
     "return 1 document" in {
 
       val query = search in INDEX_NAME -> DOC_TYPE query {
-        Parser.cactusToES(parse(query1))
+        Parser.cactusToES(parse(query1), true)
       }
       val result = Await.result(getClient().execute {
         query.limit(maxQuerySize)
@@ -98,7 +98,7 @@ class ElasticSearchSpec extends WordSpec with BeforeAndAfterAll {
   "query2" should {
     "return 1 document" in {
       val query = search in INDEX_NAME -> DOC_TYPE query {
-        Parser.cactusToES(parse(query2))
+        Parser.cactusToES(parse(query2), true)
       }
       val result = Await.result(getClient().execute {
         query.limit(maxQuerySize)
@@ -111,7 +111,7 @@ class ElasticSearchSpec extends WordSpec with BeforeAndAfterAll {
   "query3" should {
     "return 1 document" in {
       val query = search in INDEX_NAME -> DOC_TYPE query {
-        Parser.cactusToES(parse(query3))
+        Parser.cactusToES(parse(query3), true)
       }
       val result = Await.result(getClient().execute {
         query.limit(maxQuerySize)
@@ -124,7 +124,7 @@ class ElasticSearchSpec extends WordSpec with BeforeAndAfterAll {
   "query4" should {
     "return 1 document" in {
       val query = search in INDEX_NAME -> DOC_TYPE query {
-        Parser.cactusToES(parse(query4))
+        Parser.cactusToES(parse(query4), true)
       }
       val result = Await.result(getClient().execute {
         query.limit(maxQuerySize)
@@ -137,7 +137,7 @@ class ElasticSearchSpec extends WordSpec with BeforeAndAfterAll {
   "query5" should {
     "not return 1 document" in {
       val query = search in INDEX_NAME -> DOC_TYPE query {
-        Parser.cactusToES(parse(query5))
+        Parser.cactusToES(parse(query5), true)
       }
       val result = Await.result(getClient().execute {
         query.limit(maxQuerySize)

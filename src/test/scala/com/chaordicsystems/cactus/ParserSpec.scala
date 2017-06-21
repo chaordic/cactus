@@ -13,7 +13,7 @@ class ParserSpec extends WordSpec {
 
   "query 1" should {
     "return an ES query  as shown in result 1" in {
-      val m1 = parse(cactusToES(parse(query1)).builder.toString).extract[Map[String, Any]]
+      val m1 = parse(cactusToES(parse(query1), true).builder.toString).extract[Map[String, Any]]
       val m2 = parse(result1).extract[Map[String, Any]]
 
       assert((m1.toSet diff m2.toSet).toMap.isEmpty)
@@ -22,7 +22,7 @@ class ParserSpec extends WordSpec {
 
   "query 2" should {
     "return an ES query as shown in result 2" in {
-      val m1 = parse(cactusToES(parse(query2)).builder.toString).extract[Map[String, Any]]
+      val m1 = parse(cactusToES(parse(query2), true).builder.toString).extract[Map[String, Any]]
       val m2 = parse(result2.builder.toString).extract[Map[String, Any]]
 
       assert((m1.toSet diff m2.toSet).toMap.isEmpty)
@@ -31,7 +31,7 @@ class ParserSpec extends WordSpec {
 
   "query 3" should {
     "return an ES query as shown in result 3" in {
-      val m1 = parse(cactusToES(parse(query3)).builder.toString).extract[Map[String, Any]]
+      val m1 = parse(cactusToES(parse(query3), true).builder.toString).extract[Map[String, Any]]
       val m2 = parse(result3.builder.toString).extract[Map[String, Any]]
 
       assert((m1.toSet diff m2.toSet).toMap.isEmpty)
@@ -40,7 +40,7 @@ class ParserSpec extends WordSpec {
 
   "query 4" should {
     "return an ES query as shown in result 4" in {
-      val m1 = parse(cactusToES(parse(query4)).builder.toString).extract[Map[String, Any]]
+      val m1 = parse(cactusToES(parse(query4), true).builder.toString).extract[Map[String, Any]]
       val m2 = parse(result4.builder.toString).extract[Map[String, Any]]
 
       assert((m1.toSet diff m2.toSet).toMap.isEmpty)
@@ -49,8 +49,8 @@ class ParserSpec extends WordSpec {
 
   "non cactus query" should {
     "fail when attempting to parse it" in {
-      intercept[InvalidCactusQueryFormatException] {
-        cactusToES(parse(failQuery))
+      intercept[MappingException] {
+        cactusToES(parse(failQuery), true)
       }
     }
   }
@@ -58,7 +58,7 @@ class ParserSpec extends WordSpec {
   "invalid json" should {
     "fail when attempting to parse it" in {
       intercept[JsonParseException] {
-        cactusToES(failJsonQuery)
+        cactusToES(failJsonQuery, true)
       }
     }
   }

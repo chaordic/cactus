@@ -148,12 +148,12 @@ object CactusTests {
       |    "args": [
       |        {
       |          "op":"ANY",
-      |          "field": "tags",
+      |          "field": "tags.id",
       |          "args":["adidas", "nike"]
       |        },
       |        {
       |            "op":"ALL",
-      |            "field": "categories",
+      |            "field": "categories.id",
       |            "args":["tenis"]
       |        }
       |    ]
@@ -205,7 +205,7 @@ object CactusTests {
       |            "args": [
       |                {
       |                    "op":"ALL",
-      |                    "field": "categories",
+      |                    "field": "categories.id",
       |                    "args": ["shoes", "adidas"]
       |                },
       |                {
@@ -294,7 +294,7 @@ object CactusTests {
       |            "args": [
       |                {
       |                    "op":"ALL",
-      |                    "field": "categories",
+      |                    "field": "categories.id",
       |                    "args": ["preto", "olympus"]
       |                },
       |                {
