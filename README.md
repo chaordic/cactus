@@ -41,14 +41,14 @@ You could query it like:
 	"op": "AND",
 	"args": [
     {
-      "op":"ANY",
+      "op": "ANY",
       "field": "field3.name",
-      "args":["name3", "random_name"]
+      "args": ["name3", "random_name"]
     },
-		{
-			"op":"ALL",
+    {
+			"op": "ALL",
       "field": "field2.value",
-			"args":["value2_1", "value2_3", "value2_4"]
+			"args": ["value2_1", "value2_3", "value2_4"]
 		}
 	]
 }
@@ -108,14 +108,14 @@ val entity =
 	"op": "AND",
 	"args": [
     {
-      "op":"ANY",
+      "op": "ANY",
       "field": "field3.name",
-      "args":["name3", "random_name"]
+      "args": ["name3", "random_name"]
     },
 		{
-			"op":"ALL",
+			"op": "ALL",
       "field": "field2.value",
-			"args":["value2_1", "value2_3", "value2_4"]
+			"args": ["value2_1", "value2_3", "value2_4"]
 		}
 	]
 }
