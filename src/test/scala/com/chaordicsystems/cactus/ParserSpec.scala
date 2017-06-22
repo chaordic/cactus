@@ -2,7 +2,7 @@ package com.chaordicsystems.cactus
 
 import com.chaordicsystems.cactus.CactusTests._
 import com.chaordicsystems.cactus.Parser._
-import com.chaordicsystems.cactus.Validator.{InvalidArgsException, InvalidUseCaseWithTypeException}
+import com.chaordicsystems.cactus.Validator.{InvalidArgsException, InvalidFieldException, InvalidUseCaseWithTypeException, OperatorNotProvidedException}
 import com.fasterxml.jackson.core.JsonParseException
 import org.json4s._
 import org.json4s.jackson.JsonMethods._
@@ -77,6 +77,38 @@ class ParserSpec extends WordSpec {
     "only work on nested fields" in {
       intercept[InvalidUseCaseWithTypeException] {
         cactusToES(UnaryOperatorsQuery, true)
+      }
+    }
+  }
+
+  "blank query" should {
+    "thrown an exception" in {
+      intercept[OperatorNotProvidedException] {
+        cactusToES(blankQuery)
+      }
+    }
+  }
+
+  "non op query" should {
+    "thrown an exceptions" in {
+      intercept[OperatorNotProvidedException] {
+        cactusToES(nonOpQuery)
+      }
+    }
+  }
+
+  "non field query" should {
+    "thrown an exception" in {
+      intercept[InvalidFieldException] {
+        cactusToES(nonFieldQuery)
+      }
+    }
+  }
+
+  "non args query" should {
+    "thrown an exception" in {
+      intercept[InvalidArgsException] {
+        cactusToES(nonArgsQuery)
       }
     }
   }

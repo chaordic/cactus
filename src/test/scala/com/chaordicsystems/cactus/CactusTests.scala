@@ -418,4 +418,33 @@ object CactusTests {
       }
     )
   }
+
+  val blankQuery: String =
+    """
+      |{}
+    """.stripMargin
+
+  val nonOpQuery: String =
+    """
+      |{
+      |  "field": "shoes.price",
+      |  "args": 42.0
+      |}
+    """.stripMargin
+
+  val nonFieldQuery: String =
+    """
+      |{
+      |  "op": "EQ",
+      |  "args": 42.0
+      |}
+    """.stripMargin
+
+  val nonArgsQuery: String =
+    """
+      |{
+      |  "op": "EQ",
+      |  "field": "shoes.price"
+      |}
+    """.stripMargin
 }
