@@ -26,7 +26,6 @@ case class Field(value: String) {
       case Operator.GE  => rangeQuery(value) from args includeLower true
       case Operator.NE  => matchQuery(value, args)
       case Operator.EQ  => matchQuery(value, args)
-      case _            => throw InvalidOperatorException()
     }
   }
 
@@ -36,7 +35,7 @@ case class Field(value: String) {
       case d: Double  => comparativeQueryHandler(op, d)
       case b: BigInt  => comparativeQueryHandler(op, b.toInt)
       case s: String  => comparativeQueryHandler(op, s)
-      case _          => throw InvalidValueTypeException()
+      case x          => throw InvalidValueTypeException(x)
     }
   }
 
@@ -45,12 +44,12 @@ case class Field(value: String) {
       case _: Boolean => "value_bool"
       case _: Double  => "value_float"
       case _: String  => "value_str"
-      case _          => throw InvalidValueTypeException()
+      case x          => throw InvalidValueTypeException(x)
     }
 
   private def resolveOperator(op: Operator, args: Any, typeEnabled: Boolean): QueryDefinition = {
     if (typeEnabled) {
-      if (!isFieldNested) throw InvalidUseCaseWithTypeException()
+      if (!isFieldNested) throw InvalidUseCaseWithTypeException(value)
       nestedOrElse(bool {
         must(
           matchQuery(s"$path.name", name.get),
@@ -72,7 +71,7 @@ case class Field(value: String) {
 
   def NE(args: Any, typeEnabled: Boolean = false): QueryDefinition = {
     if (typeEnabled) {
-      if (!isFieldNested) throw InvalidUseCaseWithTypeException()
+      if (!isFieldNested) throw InvalidUseCaseWithTypeException(value)
       nestedOrElse(bool {
         must(matchQuery(s"$path.name", name.get))
         not(Field(s"$path.${getType(args)}") comparativeQuery (Operator.NE, args))

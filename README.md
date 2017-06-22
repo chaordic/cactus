@@ -88,7 +88,7 @@ bool {
                 matchQuery("field2.value", "value2_4")
               )
             }
-          },
+          }
         )
       }
     )

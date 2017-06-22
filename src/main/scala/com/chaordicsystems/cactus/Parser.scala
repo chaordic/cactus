@@ -49,10 +49,8 @@ object Parser {
       handleBinary(operation, typeEnabled)
     } else if (isUnary(op)) {
       handleUnary(operation, typeEnabled)
-    } else if (isMultiary(op)) {
-      handleMultiary(operation)
     } else {
-      throw InvalidCactusQueryFormatException()
+      handleMultiary(operation)
     }
   }
 
