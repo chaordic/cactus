@@ -26,4 +26,4 @@ jobs:
           path: result-artifacts
 
       - store_test_results:
-          path: test-result
+          path: result-test
