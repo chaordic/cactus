@@ -23,6 +23,7 @@ object Parser {
       case Operator.GT => field GT (args, typeEnabled)
       case Operator.LE => field LE (args, typeEnabled)
       case Operator.GE => field GE (args, typeEnabled)
+      case _           => throw OperatorHandlerException(op)
     }
   }
 
@@ -31,7 +32,8 @@ object Parser {
     val args = validateBinaryArgs(operation)
     op match {
       case Operator.AND => AND(args.map(validateAndTranslate(_, typeEnabled)))
-      case Operator.OR => OR(args.map(validateAndTranslate(_, typeEnabled)))
+      case Operator.OR  => OR(args.map(validateAndTranslate(_, typeEnabled)))
+      case _            => throw OperatorHandlerException(op)
     }
   }
 
@@ -40,6 +42,7 @@ object Parser {
     op match {
       case Operator.ALL => field ALL args
       case Operator.ANY => field ANY args
+      case _            => throw OperatorHandlerException(op)
     }
   }
 
@@ -49,8 +52,10 @@ object Parser {
       handleBinary(operation, typeEnabled)
     } else if (isUnary(op)) {
       handleUnary(operation, typeEnabled)
-    } else {
+    } else if (isMultiary(op)) {
       handleMultiary(operation)
+    } else {
+      throw InvalidOperatorException(op)
     }
   }
 

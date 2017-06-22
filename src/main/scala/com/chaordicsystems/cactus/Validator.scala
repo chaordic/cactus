@@ -9,6 +9,7 @@ import scala.util.{Failure, Success, Try}
 object Validator {
   case class OperatorNotProvidedException(m: String = "Operator was not provided. Please check the documentation.") extends Exception(m)
   case class InvalidOperatorException(op: Any) extends Exception(s"$op is not a valid operator. Please check the project specifications.")
+  case class OperatorHandlerException(op: Operator) extends Exception(s"The operator ${op.toString} wasn't handled as expected.")
 
   case class FieldNotProvidedException(op: String) extends Exception(s"Operator $op requires a Field and it was not provided. Please check the documentation.")
   case class InvalidFieldException(field: Any) extends Exception(s"$field is not a valid field. Please check the project specifications.")

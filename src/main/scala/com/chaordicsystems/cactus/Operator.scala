@@ -4,11 +4,14 @@ object Operator extends Enumeration {
   type Operator = Value
   val AND, OR, LT, GT, EQ, NE, LE, GE, ALL, ANY = Value
 
-  def isUnary(op: Operator): Boolean = op == LT || op == GT || op == EQ || op == NE || op == LE || op == GE
+  val Unary: List[Operator] = List(LT, GT, EQ, NE, LE, GE)
+  def isUnary(op: Operator): Boolean = Unary.contains(op)
 
-  def isBinary(op: Operator): Boolean = op == AND || op == OR
+  val Binary: List[Operator] = List(AND, OR)
+  def isBinary(op: Operator): Boolean = Binary.contains(op)
 
-  def isMultiary(op: Operator): Boolean = op == ALL || op == ANY
+  val Multiary: List[Operator] = List(ALL, ANY)
+  def isMultiary(op: Operator): Boolean = Multiary.contains(op)
 }
 
 
