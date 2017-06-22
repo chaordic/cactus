@@ -10,7 +10,8 @@ object Validator {
   case class InvalidFieldException(m: String = "Field was not provided or is not valid. Please check the documentation.") extends Exception(m)
   case class InvalidArgsException(m: String = "Args was not provided or is not valid. Please check the documentation.") extends Exception(m)
   case class NotEnoughOperationsException(m: String = "Inside a AND or OR should contain at least two other operations, please check the documentation for more details.") extends Exception(m)
-  case class InvalidValueType(m: String = "Supported types are: String, Int, Boolean and Float. Please check the documentation for more details.") extends Exception(m)
+  case class InvalidValueTypeException(m: String = "Supported types are: String, Int, Boolean and Float. Please check the documentation for more details.") extends Exception(m)
+  case class InvalidUseCaseWithTypeException(m: String = "The type enabled mode needs to be done in a nested field. Please check the documentation for more details") extends Exception(m)
 
   implicit val formats = DefaultFormats
 

@@ -6,21 +6,24 @@ import com.sksamuel.elastic4s.ElasticDsl.{bool, matchQuery, must, nestedQuery, n
 import com.sksamuel.elastic4s.QueryDefinition
 
 case class Field(value: String) {
-  private val isFieldNested: Boolean = value.contains(".")
+  private val isFieldNested: Boolean = value.contains('.')
 
-  private val path: String = value.split('.')(0)
-  private val name: String = value.split('.')(1)
+  private val path: String = if (isFieldNested) value.split('.')(0) else value
+  private val name: Option[String] = if (isFieldNested) Some(value.split('.')(1)) else None
 
-  private def nestedOrElse(query: QueryDefinition): QueryDefinition =
-    if (isFieldNested) nestedQuery(path).query { query }
+  private def nestedOrElse(query: QueryDefinition): QueryDefinition = {
+    if (isFieldNested) nestedQuery(path).query {
+      query
+    }
     else query
+  }
 
   private def comparativeQueryHandler(op: Operator, args: Any): QueryDefinition = {
     op match {
       case Operator.LT  => rangeQuery(value) to args includeUpper false
       case Operator.GT  => rangeQuery(value) from args includeLower false
       case Operator.LE  => rangeQuery(value) to args includeUpper true
-      case Operator.GE  => rangeQuery(value) from args includeUpper true
+      case Operator.GE  => rangeQuery(value) from args includeLower true
       case Operator.NE  => matchQuery(value, args)
       case Operator.EQ  => matchQuery(value, args)
       case _            => throw InvalidOperatorException()
@@ -33,7 +36,7 @@ case class Field(value: String) {
       case d: Double  => comparativeQueryHandler(op, d)
       case b: BigInt  => comparativeQueryHandler(op, b.toInt)
       case s: String  => comparativeQueryHandler(op, s)
-      case _          => throw InvalidValueType()
+      case _          => throw InvalidValueTypeException()
     }
   }
 
@@ -43,15 +46,16 @@ case class Field(value: String) {
       case _: Boolean => "value_bool"
       case _: Double  => "value_float"
       case _: String  => "value_str"
-      case _          => throw InvalidValueType()
+      case _          => throw InvalidValueTypeException()
     }
   }
 
   private def resolveOperator(op: Operator, args: Any, typeEnabled: Boolean): QueryDefinition = {
     if (typeEnabled) {
-      nestedOrElse(bool{
+      if (!isFieldNested) throw InvalidUseCaseWithTypeException()
+      nestedOrElse(bool {
         must(
-          matchQuery(s"$path.name", name),
+          matchQuery(s"$path.name", name.get),
           Field(s"$path.${getType(args)}") comparativeQuery (op, args)
         )
       })
@@ -70,16 +74,18 @@ case class Field(value: String) {
 
   def NE(args: Any, typeEnabled: Boolean = false): QueryDefinition = {
     if (typeEnabled) {
-      nestedOrElse(bool{
-        must(matchQuery(s"$path.name", name))
+      if (!isFieldNested) throw InvalidUseCaseWithTypeException()
+      nestedOrElse(bool {
+        must(matchQuery(s"$path.name", name.get))
         not(Field(s"$path.${getType(args)}") comparativeQuery (Operator.NE, args))
       })
     } else nestedOrElse(bool { not { comparativeQuery(Operator.NE, args) } })
   }
 
-  def ALL(args: List[Any]): QueryDefinition =
+  def ALL(args: List[Any]): QueryDefinition = {
     if (args.length == 1) EQ(args.head)
     else bool { must { args.map(EQ(_)) } }
+  }
 
   def ANY(args: List[Any]): QueryDefinition = nestedOrElse(bool { should(args.map(arg => matchQuery(value, arg))) minimumShouldMatch 1 })
 }

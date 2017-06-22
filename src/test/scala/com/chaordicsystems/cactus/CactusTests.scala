@@ -1,6 +1,6 @@
 package com.chaordicsystems.cactus
 
-import com.sksamuel.elastic4s.ElasticDsl.{bool, matchQuery, must, nestedQuery, rangeQuery, should, termQuery}
+import com.sksamuel.elastic4s.ElasticDsl._
 import com.sksamuel.elastic4s.QueryDefinition
 
 object CactusTests {
@@ -109,12 +109,12 @@ object CactusTests {
     """.stripMargin
 
   val result2: QueryDefinition = bool {
-    must (
+    must(
       bool {
-        should (
+        should(
           nestedQuery("details").query {
             bool {
-              must (
+              must(
                 matchQuery("details.name", "marca"),
                 matchQuery("details.value_str", "nike")
               )
@@ -122,7 +122,7 @@ object CactusTests {
           },
           nestedQuery("details").query {
             bool {
-              must (
+              must(
                 matchQuery("details.name", "size"),
                 matchQuery("details.value_str", "M")
               )
@@ -132,7 +132,7 @@ object CactusTests {
       },
       nestedQuery("details").query {
         bool {
-          must (
+          must(
             matchQuery("details.name", "price"),
             rangeQuery("details.value_float") to 10.0 includeUpper false
           )
@@ -161,10 +161,10 @@ object CactusTests {
     """.stripMargin
 
   val result3: QueryDefinition = bool {
-    must (
+    must(
       nestedQuery("tags").query {
         bool {
-          should (
+          should(
             matchQuery("tags.id", "adidas"),
             matchQuery("tags.id", "nike")
           ) minimumShouldMatch 1
@@ -172,7 +172,7 @@ object CactusTests {
       },
       nestedQuery("categories").query {
         bool {
-          must (
+          must(
             matchQuery("categories.id", "tenis")
           )
         }
@@ -220,11 +220,11 @@ object CactusTests {
     """.stripMargin
 
   val result4: QueryDefinition = bool {
-    must (
+    must(
       should(
         nestedQuery("details").query {
           bool {
-            must (
+            must(
               matchQuery("details.name", "available"),
               termQuery("details.value_bool", true)
             )
@@ -232,7 +232,7 @@ object CactusTests {
         },
         nestedQuery("details").query {
           bool {
-            must (
+            must(
               matchQuery("details.name", "size"),
               rangeQuery("details.value_int") from 10 includeLower true includeUpper true
             )
@@ -244,22 +244,23 @@ object CactusTests {
           must(
             nestedQuery("categories").query {
               bool {
-                must (
+                must(
                   matchQuery("categories.id", "shoes")
                 )
               }
             },
             nestedQuery("categories").query {
               bool {
-                must (
+                must(
                   matchQuery("categories.id", "adidas")
                 )
               }
             }
-          )},
+          )
+        },
         nestedQuery("details").query {
           bool {
-            must (
+            must(
               matchQuery("details.name", "price"),
               matchQuery("details.value_float", 10.98)
             )
@@ -347,4 +348,74 @@ object CactusTests {
       |    ]
       |}
     """.stripMargin
+
+
+  val UnaryOperatorsQuery: String =
+    """
+      |{
+      |    "op": "AND",
+      |    "args": [
+      |        {
+      |             "op":"EQ",
+      |             "field": "oh.baby",
+      |             "args": "equality"
+      |         },
+      |         {
+      |              "op":"NE",
+      |              "field": "something",
+      |              "args": "not_right"
+      |         },
+      |         {
+      |             "op":"LT",
+      |             "field": "size",
+      |             "args": 10
+      |         },
+      |         {
+      |             "op":"LE",
+      |             "field": "size",
+      |             "args": 10
+      |         },
+      |         {
+      |             "op":"GT",
+      |             "field": "shoes.price",
+      |             "args": 42.0
+      |         },
+      |         {
+      |             "op":"GE",
+      |             "field": "shoes.price",
+      |             "args": 42.0
+      |         }
+      |    ]
+      |}
+    """.stripMargin
+
+
+  val UnaryOperatorsResult: QueryDefinition = bool {
+    must(
+      nestedQuery("oh").query {
+        bool {
+          must (
+            matchQuery("oh.baby", "equality")
+          )
+        }
+      },
+      not{ matchQuery("something", "not_right") },
+      must(rangeQuery("size") to 10 includeUpper false),
+      must(rangeQuery("size") to 10 includeUpper true),
+      nestedQuery("shoes").query {
+        bool {
+          must(
+            rangeQuery("shoes.price") from 42.0 includeLower false includeUpper true
+          )
+        }
+      },
+      nestedQuery("shoes").query {
+        bool {
+          must(
+            rangeQuery("shoes.price") from 42.0 includeLower true includeUpper true
+          )
+        }
+      }
+    )
+  }
 }
