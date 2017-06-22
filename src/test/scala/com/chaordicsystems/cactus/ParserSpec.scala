@@ -1,11 +1,12 @@
 package com.chaordicsystems.cactus
 
+import com.chaordicsystems.cactus.CactusTests._
 import com.chaordicsystems.cactus.Parser._
+import com.chaordicsystems.cactus.Validator.InvalidArgsException
+import com.fasterxml.jackson.core.JsonParseException
 import org.json4s._
 import org.json4s.jackson.JsonMethods._
 import org.scalatest.WordSpec
-import com.chaordicsystems.cactus.CactusTests._
-import com.fasterxml.jackson.core.JsonParseException
 
 class ParserSpec extends WordSpec {
 
@@ -47,14 +48,6 @@ class ParserSpec extends WordSpec {
     }
   }
 
-  "non cactus query" should {
-    "fail when attempting to parse it" in {
-      intercept[MappingException] {
-        cactusToES(failQuery, true)
-      }
-    }
-  }
-
   "invalid json" should {
     "fail when attempting to parse it" in {
       intercept[JsonParseException] {
@@ -62,4 +55,14 @@ class ParserSpec extends WordSpec {
       }
     }
   }
+
+  "non cactus query" should {
+    "fail when validating it, OR expects a list of Operations(JValue)" in {
+      intercept[InvalidArgsException] {
+        cactusToES(failQuery, true)
+      }
+    }
+  }
+
+
 }

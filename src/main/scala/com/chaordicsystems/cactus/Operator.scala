@@ -1,7 +1,5 @@
 package com.chaordicsystems.cactus
 
-case class InvalidOperatorException(m: String = "That's not a valid operation. Please check the project specifications.") extends Exception
-
 object Operator extends Enumeration {
   type Operator = Value
   val AND, OR, LT, GT, EQ, NE, LE, GE, ALL, ANY = Value

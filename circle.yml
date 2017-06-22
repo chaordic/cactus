@@ -19,11 +19,11 @@ jobs:
           command: |
             if [ "${CIRCLE_BRANCH}" == "master" ]; then
               ./gradlew publish
-              git push origin master --follow-tags
+              git push origin master
             fi
 
       - store_artifacts:
-          path: test-result
+          path: result-artifacts
 
       - store_test_results:
           path: test-result

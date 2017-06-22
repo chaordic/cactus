@@ -35,7 +35,7 @@ For example, given an ES document like:
 }
 ```
 
-You'll would query it like:
+You could query it like:
 ```json
 {
 	"op": "AND",
