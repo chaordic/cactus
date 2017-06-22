@@ -11,20 +11,20 @@ For example, given an ES document like:
   "field1": "value1",
   "field2": [
     {
-      "id": "id2_1",
-      "value": "value2_1"
+        "id": "id2_1",
+        "value": "value2_1"
     },
     {
-      "id": "id2_2",
-      "value": "value2_2"
+        "id": "id2_2",
+        "value": "value2_2"
     },
     {
-      "id": "id2_3",
-      "value": "value2_3"
+        "id": "id2_3",
+        "value": "value2_3"
     },
     {
-      "id": "id2_4",
-      "value": "value2_4"
+        "id": "id2_4",
+        "value": "value2_4"
     }
   ],
   "field3" : {
@@ -41,15 +41,15 @@ You could query it like:
 	"op": "AND",
 	"args": [
     {
-      "op": "ANY",
-      "field": "field3.name",
-      "args": ["name3", "random_name"]
+        "op": "ANY",
+        "field": "field3.name",
+        "args": ["name3", "random_name"]
     },
     {
-			"op": "ALL",
-      "field": "field2.value",
-			"args": ["value2_1", "value2_3", "value2_4"]
-		}
+	    "op": "ALL",
+        "field": "field2.value",
+		"args": ["value2_1", "value2_3", "value2_4"]
+	}
 	]
 }
 ```
@@ -107,16 +107,16 @@ val entity =
 {
 	"op": "AND",
 	"args": [
-    {
-      "op": "ANY",
-      "field": "field3.name",
-      "args": ["name3", "random_name"]
-    },
-		{
-			"op": "ALL",
-      "field": "field2.value",
-			"args": ["value2_1", "value2_3", "value2_4"]
-		}
+        {
+            "op": "ANY",
+            "field": "field3.name",
+            "args": ["name3", "random_name"]
+        },
+        {
+            "op": "ALL",
+            "field": "field2.value",
+            "args": ["value2_1", "value2_3", "value2_4"]
+        }
 	]
 }
 """

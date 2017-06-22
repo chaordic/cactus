@@ -40,15 +40,13 @@ case class Field(value: String) {
     }
   }
 
-  private def getType(args: Any): String = {
-    args match {
+  private def getType(args: Any): String = args match {
       case _: BigInt  => "value_int"
       case _: Boolean => "value_bool"
       case _: Double  => "value_float"
       case _: String  => "value_str"
       case _          => throw InvalidValueTypeException()
     }
-  }
 
   private def resolveOperator(op: Operator, args: Any, typeEnabled: Boolean): QueryDefinition = {
     if (typeEnabled) {
