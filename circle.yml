@@ -1,0 +1,30 @@
+version: 2
+jobs:
+  build:
+    working_directory: ~/cactus
+    docker:
+      - image: circleci/openjdk:8-jdk-browsers
+    steps:
+      - checkout
+
+      - run:
+          name: Install Dependencies
+          command: ./gradlew dependencies
+
+      - run:
+          name: Test
+          command: ./gradlew check
+
+      - deploy:
+          command: |
+            if [ "${CIRCLE_BRANCH}" == "master" ]; then
+              ./gradlew publish
+              ./create-tag.sh
+              git push origin master --follow-tag
+            fi
+
+      - store_artifacts:
+          path: result-artifacts
+
+      - store_test_results:
+          path: result-test

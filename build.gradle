@@ -1,0 +1,64 @@
+plugins {
+    id 'scala'
+    id 'maven-publish'
+    id 'com.github.maiflai.scalatest' version '0.15'
+}
+version '1.0.0'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    zinc 'com.typesafe.zinc:zinc:0.3.9'
+    compile(
+            'org.scala-lang:scala-library:2.11.8',
+            'ch.qos.logback:logback-classic:1.1.7',
+            'com.typesafe.scala-logging:scala-logging_2.11:3.5.0',
+            'org.json4s:json4s-jackson_2.11:3.2.11',
+            'org.json4s:json4s-ext_2.11:3.2.11',
+            'com.sksamuel.elastic4s:elastic4s-core_2.11:2.4.0',
+            'com.sksamuel.elastic4s:elastic4s-jackson_2.11:2.4.0'
+    )
+    testCompile(
+            'org.scalamock:scalamock-scalatest-support_2.11:3.5.0',
+            'org.scalatest:scalatest_2.11:3.0.1',
+            'com.typesafe:config:1.3.1'
+    )
+    testRuntime 'org.pegdown:pegdown:1.4.2'
+}
+
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            groupId 'com.chaordicsystems'
+            artifactId 'cactus'
+            from components.java
+
+            artifact sourceJar {
+                classifier 'sources'
+            }
+        }
+    }
+
+    repositories {
+        maven {
+            url 'https://platform-artifactory.chaordicsystems.com/artifactory/platform/'
+            credentials {
+                username artifactoryUser
+                password artifactoryPass
+            }
+        }
+    }
+}
+
+task sourceJar(type: Jar) {
+    from sourceSets.main.allScala
+}
+
+test {
+    testLogging {
+        events 'passed', 'skipped', 'failed', 'standardOut', 'standardError'
+    }
+}
