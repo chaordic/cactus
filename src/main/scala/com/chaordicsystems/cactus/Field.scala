@@ -26,6 +26,7 @@ case class Field(value: String) {
       case Operator.GE  => rangeQuery(value) from args includeLower true
       case Operator.NE  => matchQuery(value, args)
       case Operator.EQ  => matchQuery(value, args)
+      case x            => throw OperatorHandlerException(x)
     }
   }
 
