@@ -3,7 +3,7 @@ plugins {
     id 'maven-publish'
     id 'com.github.maiflai.scalatest' version '0.15'
 }
-version '1.0.0'
+version 'v1.0.0'
 
 repositories {
     mavenCentral()
