@@ -37,7 +37,7 @@ object Validator {
             case Success(v) => v
             case Failure(_) => throw InvalidOperatorException(o)
           }
-        case _ => throw InvalidOperatorException((json \ "op").extract[Any])
+        case None => throw InvalidOperatorException((json \ "op").extract[Any])
       }
     } else {
       throw OperatorNotProvidedException()
@@ -50,7 +50,7 @@ object Validator {
       val field = (json \ "field").extractOpt[String]
       field match {
         case Some(f) => Field(f)
-        case _       => throw InvalidFieldException((json \ "field").extract[Any])
+        case None    => throw InvalidFieldException((json \ "field").extract[Any])
       }
     } else {
       throw FieldNotProvidedException((json \ "op").extract[String])
@@ -62,7 +62,7 @@ object Validator {
       val args = (json \ "args").extractOpt[Any]
       args match {
         case Some(a) => a
-        case _       => throw InvalidArgsException((json \ "args").extract[Any])
+        case None    => throw InvalidArgsException((json \ "args").extract[Any])
       }
     } else {
       throw ArgsNotProvidedException((json \ "op").extract[String])
@@ -76,7 +76,7 @@ object Validator {
         case Some(a) =>
           if (a.length >= 2) a
           else throw NotEnoughOperationsException((json \ "op").extract[String])
-        case _ => throw InvalidArgsException((json \ "args").extract[Any])
+        case None => throw InvalidArgsException((json \ "args").extract[Any])
       }
     } else {
       throw ArgsNotProvidedException((json \ "op").extract[String])
@@ -89,7 +89,7 @@ object Validator {
       val args = (json \ "args").extractOpt[List[Any]]
       args match {
         case Some(a) => a
-        case _       => throw InvalidArgsException((json \ "args").extract[Any])
+        case None    => throw InvalidArgsException((json \ "args").extract[Any])
       }
     } else {
       throw ArgsNotProvidedException((json \ "op").extract[String])
