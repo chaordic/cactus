@@ -2,7 +2,7 @@ package com.chaordicsystems.cactus
 
 import com.chaordicsystems.cactus.CactusTests._
 import com.chaordicsystems.cactus.Parser._
-import com.chaordicsystems.cactus.Validator.{ArgsNotProvidedException, FieldNotProvidedException, InvalidArgsException, InvalidUseCaseWithTypeException, OperatorNotProvidedException}
+import com.chaordicsystems.cactus.Validator.{ArgsNotProvidedException, FieldNotProvidedException, InvalidArgsException, OperatorNotProvidedException}
 import com.fasterxml.jackson.core.JsonParseException
 import org.json4s._
 import org.json4s.jackson.JsonMethods._
@@ -73,14 +73,6 @@ class ParserSpec extends WordSpec {
     }
   }
 
-  "type enabled parses" should {
-    "only work on nested fields" in {
-      intercept[InvalidUseCaseWithTypeException] {
-        cactusToES(UnaryOperatorsQuery, typeEnabled = true)
-      }
-    }
-  }
-
   "blank query" should {
     "thrown an exception" in {
       intercept[OperatorNotProvidedException] {
@@ -110,6 +102,22 @@ class ParserSpec extends WordSpec {
       intercept[ArgsNotProvidedException] {
         cactusToES(nonArgsQuery)
       }
+    }
+  }
+
+  "query with type enabled" should {
+    "work even though type is not nested" in {
+      val m1 = parse(cactusToES(nonNestedFieldWithTypeEnabledQuery, typeEnabled = true).builder.toString).extract[Map[String, Any]]
+      val m2 = parse(cactusToES(nonNestedFieldWithTypeEnabledQuery).builder.toString).extract[Map[String, Any]]
+
+      assert((m1.toSet diff m2.toSet).toMap.isEmpty)
+    }
+
+    "but should fail when type is nested" in {
+      val m1 = parse(cactusToES(query1, typeEnabled = true).builder.toString).extract[Map[String, Any]]
+      val m2 = parse(cactusToES(query1).builder.toString).extract[Map[String, Any]]
+
+      assert((m1.toSet diff m2.toSet).toMap.nonEmpty)
     }
   }
 }
