@@ -49,8 +49,7 @@ case class Field(value: String) {
     }
 
   private def resolveOperator(op: Operator, args: Any, typeEnabled: Boolean): QueryDefinition = {
-    if (typeEnabled) {
-      if (!isFieldNested) throw InvalidUseCaseWithTypeException(value)
+    if (typeEnabled && isFieldNested) {
       nestedOrElse(bool {
         must(
           matchQuery(s"$path.name", name.get),
@@ -71,8 +70,7 @@ case class Field(value: String) {
   def GE(args: Any, typeEnabled: Boolean = false): QueryDefinition = resolveOperator(Operator.GE, args, typeEnabled)
 
   def NE(args: Any, typeEnabled: Boolean = false): QueryDefinition = {
-    if (typeEnabled) {
-      if (!isFieldNested) throw InvalidUseCaseWithTypeException(value)
+    if (typeEnabled && isFieldNested) {
       nestedOrElse(bool {
         must(matchQuery(s"$path.name", name.get))
         not(Field(s"$path.${getType(args)}") comparativeQuery (Operator.NE, args))

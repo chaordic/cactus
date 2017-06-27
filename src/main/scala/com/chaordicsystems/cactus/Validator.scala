@@ -20,7 +20,6 @@ object Validator {
   case class NotEnoughOperationsException(op: String) extends Exception(s"Operator $op should contain at least two other operations.")
 
   case class InvalidValueTypeException(x: Any) extends Exception(s"${x.getClass} is not supported. The supported types are: String, Int, Boolean and Float.")
-  case class InvalidUseCaseWithTypeException(field: String) extends Exception(s"The type enabled mode needs to be done in a nested field $field.")
 
   implicit val formats = DefaultFormats
 

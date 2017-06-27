@@ -447,4 +447,13 @@ object CactusTests {
       |  "field": "shoes.price"
       |}
     """.stripMargin
+
+  val nonNestedFieldWithTypeEnabledQuery: String =
+    """
+      |{
+      |  "op": "EQ",
+      |  "field": "status",
+      |  "args": "AVAILABLE"
+      |}
+    """.stripMargin
 }
